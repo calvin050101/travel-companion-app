@@ -1,0 +1,187 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Scoped only to MinigamePage */
+.minigame-page {
+  background: url('./bg.png') #030728 no-repeat center;
+  background-size: cover;
+  min-height: 100vh;
+
+  /* Push content below the appbar */
+  padding-top: 0px; 
+  padding-bottom: 40px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Container inside MinigamePage */
+.minigame-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Title Style */
+.minigame-title {
+  color: black;
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Currency Converter Box */
+.currency-converter {
+  max-width: 410px;
+  margin: 0 auto;
+  padding: 40px 30px 50px;
+  border-radius: 8px;
+  backdrop-filter: blur(30px);
+  background: rgba(2, 7, 40, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.converter-title {
+  color: #fff;
+  font-size: 1.65rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.converter-form {
+  margin-top: 45px;
+}
+
+.form-group {
+  display: flex;
+  margin-bottom: 30px;
+  flex-direction: column;
+}
+
+.form-label {
+  color: #fff;
+  font-weight: 500;
+  margin-bottom: 9px;
+  font-size: 1rem;
+}
+
+.form-input {
+  outline: none;
+  font-size: 1.1rem;
+  padding: 0 15px;
+  color: #fff;
+  font-weight: 500;
+  min-height: 48px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.form-currency-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.currency-select {
+  display: flex;
+  padding: 0 10px;
+  min-height: 45px;
+  align-items: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.currency-select img {
+  width: 25px;
+}
+
+.currency-dropdown {
+  outline: none;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0 10px 0 5px;
+}
+
+.currency-dropdown option {
+  color: #000;
+  font-weight: 500;
+}
+
+.swap-icon {
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  display: flex;
+  margin-top: 25px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  transition: 0.2s ease;
+}
+
+.swap-icon:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.submit-button {
+  width: 100%;
+  min-height: 52px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 5px;
+  transition: 0.2s ease;
+}
+
+.submit-button.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.submit-button:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.exchange-rate-result {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 25px 0;
+  margin-top: 25px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 640px) {
+  .minigame-page {
+    padding: 20px 10px 40px; /* keep bottom padding consistent */
+  }
+
+  .currency-converter {
+    padding: 30px 20px 40px;
+  }
+}
