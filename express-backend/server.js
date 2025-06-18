@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const QRCode = require('qrcode');
-const currencyRoutes = require('./routes/currency');  // ✅ Added your currency route
+const currencyRoutes = require('./routes/currency');  // ✅ Added currency route
 
 dotenv.config();
 
