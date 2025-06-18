@@ -1,11 +1,11 @@
-import React from 'react';
 import {CssBaseline} from '@material-ui/core';
 import './components/Pages/FormStyles/FormStyles.css';
 
-import {BrowserRouter, Form, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import HomePage from './components/Pages/HomePage';
 import LoginPage from './components/Pages/LoginPage';
 import RegistrationPage from './components/Pages/RegistrationPage';
+import WeatherPage from './components/Pages/WeatherPage';
 import Dashboard from './components/Pages/DashboardPage.jsx';
 import Minigamepage from './components/Pages/CurrencyPage';
 import {SelectedPlaceProvider} from './components/PlaceDetails/SelectedPlaceContext';
@@ -18,9 +18,10 @@ const App = () =>
             <SelectedPlaceProvider>
                     <CssBaseline />
                     <Routes>
-                        <Route path = "/" element = {<HomePage />} index = {true} /> {/* Set default */}
+                        <Route path = "/" element = {<HomePage />} index = {true} />                
                         <Route path = "/login" element = {<LoginPage />} />
                         <Route path = "/register" element = {<RegistrationPage />} />
+                        <Route path = "/weather" element = {<WeatherPage />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/minigame" element={<Minigamepage />} />
                         <Route path = "*" element={<NotFound />} />
