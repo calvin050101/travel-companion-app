@@ -3,7 +3,7 @@ import { Autocomplete } from '@react-google-maps/api';
 import { AppBar, Toolbar, Typography, InputBase, Box, IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { Euro } from '@material-ui/icons';
+import { Euro, WbSunny } from '@material-ui/icons'; // Added WbSunny icon
 import { Link, useNavigate } from 'react-router-dom';
 import useStyles from './styles.js';
 import { checkUserAuthentication } from '../utilities/authUtils.js';
@@ -22,40 +22,30 @@ const Header = ({ onPlaceChanged, onLoad }) => {
     checkAuthentication();
   }, [localStorage.getItem('token')]);
 
-  const handlePlaceChanged = (place) => 
-  {
-    console.log('Place changed',place);
+  const handlePlaceChanged = (place) => {
+    console.log('Place changed', place);
 
-    if (place && place.geometry && place.geometry.location)
-    {
+    if (place && place.geometry && place.geometry.location) {
       const location = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       };
 
-      console.log('Location:',location);
-    }
-
-    else
-    {
+      console.log('Location:', location);
+    } else {
       console.error('Invalid place:', place);
     }
-
-    // Placeholder function for onPlaceChanged
   };
 
   const handleLoad = (autocomplete) => {
     console.log('Autocomplete loaded', autocomplete);
-    // Placeholder function for onLoad
   };
 
   const handleAccountCircleClick = () => {
     console.log('AccountCircle clicked');
-    // Redirect to the dashboard if logged in
     if (isLoggedIn) {
       navigate('/dashboard');
     } else {
-      // Redirect to login if not logged in
       navigate('/login');
     }
   };
@@ -70,12 +60,17 @@ const Header = ({ onPlaceChanged, onLoad }) => {
         <Box display="flex" alignItems="center" justifyContent="space-between">
 
           <Link to="/minigame" style={{ textDecoration: 'none' }}>
-            <IconButton aria-label="Euro" style = {{color :'#e1e1e1'}}> <Euro /></IconButton>
+            <IconButton aria-label="Euro" style={{ color: '#e1e1e1' }}>
+              <Euro />
+            </IconButton>
           </Link>
 
-          {/* <Typography variant="h6" className={classes.title} style = {{marginRight: '1rem'}}>
-            Explore new places
-          </Typography> */}
+          <Link to="/weather" style={{ textDecoration: 'none' }}>
+            <IconButton aria-label="Weather" style={{ color: '#e1e1e1' }}>
+              <WbSunny />
+            </IconButton>
+          </Link>
+
           {isLoggedIn ? (
             <IconButton
               aria-label="account-circle"
@@ -91,8 +86,8 @@ const Header = ({ onPlaceChanged, onLoad }) => {
               </IconButton>
             </Link>
           )}
-          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
 
+          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />

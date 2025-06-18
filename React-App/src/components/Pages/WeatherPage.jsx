@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import './WeatherPage.css';
-import {getWeatherData} from '../../api/weather_api';
+import { getWeatherData } from '../../api/weather_api';
+import FormHeader from './FormStyles/FormHeader'; // Correct header import
 
 const WeatherPage = () => {
     const [cityName, setCityName] = useState("");
-    const [weatherData, setWeatherData] = useState({});
-
+    const [weatherData, setWeatherData] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -50,31 +50,32 @@ const WeatherPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        updateWeather().then(() => {});
+        updateWeather();
     };
 
     return (
-        <div className="weather-container">
-            <h1 style={{ textAlign: 'center', color: '#333' }}>Current Weather</h1>
+        <div className="weather-page">
+            <FormHeader /> {/* Use FormHeader for consistency */}
 
-            <form className="weather-form" onSubmit={handleSubmit}>
-                <input
-                    className="city-input"
-                    type="text"
-                    value={cityName}
-                    onChange={(e) => setCityName(e.target.value)}
-                    placeholder="Enter city name"
-                />
-                <button type="submit" className="get-weather-btn">Get Weather</button>
-            </form>
+            <div className="weather-container">
+                <h1 style={{ textAlign: 'center', color: '#333' }}>Current Weather</h1>
 
-            {loading && <p className="loading-text">Loading weather data...</p>}
+                <form className="weather-form" onSubmit={handleSubmit}>
+                    <input
+                        className="city-input"
+                        type="text"
+                        value={cityName}
+                        onChange={(e) => setCityName(e.target.value)}
+                        placeholder="Enter city name"
+                    />
+                    <button type="submit" className="get-weather-btn">Get Weather</button>
+                </form>
 
-            {error && <p className="error-message">{error}</p>}
+                {loading && <p className="loading-text">Loading weather data...</p>}
 
-            {
-                weatherData &&
-                (
+                {error && <p className="error-message">{error}</p>}
+
+                {weatherData && (
                     <div className="main-container">
                         <h2>{weatherData.cityName}</h2>
                         <div className="top-container">
@@ -98,13 +99,16 @@ const WeatherPage = () => {
                             <p><strong>Pressure:</strong> {weatherData.pressure} hPa</p>
                         </div>
                     </div>
-                )
-            }
-            {!loading && !error && !weatherData && (
-                <p style={{ textAlign: 'center', color: '#777' }}>Enter a city name to see the weather.</p>
-            )}
+                )}
+
+                {!loading && !error && !weatherData && (
+                    <p style={{ textAlign: 'center', color: '#777' }}>
+                        Enter a city name to see the weather.
+                    </p>
+                )}
+            </div>
         </div>
     );
-}
+};
 
 export default WeatherPage;
