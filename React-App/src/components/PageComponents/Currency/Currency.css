@@ -8,8 +8,8 @@
   font-family: "Montserrat", sans-serif;
 }
 
-/* Scoped only to MinigamePage */
-.minigame-page {
+/* Scoped only to CurrencyPage */
+.currency-page {
   background: url('./bg.png') #030728 no-repeat center;
   background-size: cover;
   min-height: 100vh;
@@ -20,8 +20,8 @@
   align-items: center;
 }
 
-/* Container inside MinigamePage */
-.minigame-content {
+/* Container inside CurrencyPage */
+.currency-content {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -29,7 +29,7 @@
 }
 
 /* Title Style */
-.minigame-title {
+.currency-title {
   color: #fff;
   font-size: 2.2em;
   margin-bottom: 25px;
