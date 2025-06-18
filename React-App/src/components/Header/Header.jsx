@@ -3,8 +3,7 @@ import { Autocomplete } from '@react-google-maps/api';
 import { AppBar, Toolbar, Typography, InputBase, Box, IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { SportsEsports } from '@material-ui/icons';
-import { Feedback } from '@material-ui/icons';
+import { Euro } from '@material-ui/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import useStyles from './styles.js';
 import { checkUserAuthentication } from '../utilities/authUtils.js';
@@ -65,17 +64,13 @@ const Header = ({ onPlaceChanged, onLoad }) => {
     <AppBar position="static">
       <Toolbar className={classes.toolbar}>
         <Typography variant="h5" className={classes.title}>
-          Tourism Kiosk
+          Travel Companion
         </Typography>
 
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          
-          <Link to="/feedback" style={{ textDecoration: 'none' }}>
-            <IconButton aria-label="feedback" style = {{color :'#D7F007'}}> <Feedback /></IconButton>
-          </Link>
 
           <Link to="/minigame" style={{ textDecoration: 'none' }}>
-            <IconButton aria-label="minigame" style = {{color :'#38DA04'}}> <SportsEsports /></IconButton>
+            <IconButton aria-label="Euro" style = {{color :'#e1e1e1'}}> <Euro /></IconButton>
           </Link>
 
           {/* <Typography variant="h6" className={classes.title} style = {{marginRight: '1rem'}}>

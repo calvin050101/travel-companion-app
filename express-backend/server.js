@@ -28,17 +28,16 @@ const userSchema = new mongoose.Schema({
   record_id: String
 });
 
-const transactionSchema = new mongoose.Schema({
-  user_email: String,
-  place_name: String,
-  item_name: String,
-  item_price: Number,
-  quantity: Number,
-  order_id: String
+const bookmarkSchema = new mongoose.Schema({
+  userEmail: { type: String, required: true },
+  name: String,
+  address: String,
+  web_url: String,
+  list: String
 });
 
+const Bookmark = mongoose.model('Bookmark', bookmarkSchema);
 const User = mongoose.model('User', userSchema);
-const Transaction = mongoose.model('Transaction', transactionSchema);
 
 // === Helper Functions ===
 function encryptPassword(salt, password) {
@@ -85,6 +84,110 @@ app.get('/api/user/profile', authenticateToken, async (req, res) => {
   }
 });
 
+app.get('/api/bookmarks/lists', authenticateToken, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+    const lists = await Bookmark.distinct('list', { userEmail });
+
+    res.status(200).json({ lists });
+  } catch (error) {
+    console.error('Failed to fetch lists:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/bookmarks', authenticateToken, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+    const bookmarks = await Bookmark.find({ userEmail });
+    res.status(200).json(bookmarks);
+  } catch (error) {
+    console.error('Failed to fetch bookmarks:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.delete('/api/bookmarks', authenticateToken, async (req, res) => {
+  const { name, address, list } = req.body;
+  const userEmail = req.user.email;
+
+  try {
+    const deleted = await Bookmark.deleteOne({ userEmail, name, address, list });
+    if (deleted.deletedCount === 0) {
+      return res.status(404).json({ message: 'Bookmark not found' });
+    }
+    res.status(200).json({ message: 'Bookmark deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting bookmark:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.delete('/api/bookmarks/group', authenticateToken, async (req, res) => {
+  const { list } = req.body;
+  const userEmail = req.user.email;
+
+  try {
+    const result = await Bookmark.deleteMany({ userEmail, list });
+    res.status(200).json({ message: 'Bookmark list deleted', deletedCount: result.deletedCount });
+  } catch (err) {
+    console.error('Error deleting bookmark list:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.patch('/api/user/update-profile', authenticateToken, async (req, res) => {
+  const email = req.user.email;
+  const { first_name, last_name } = req.body;
+
+  try {
+    await User.updateOne({ email }, { $set: { first_name, last_name } });
+    res.status(200).json({ message: 'Profile updated successfully' });
+  } catch (err) {
+    console.error('Profile update failed:', err);
+    res.status(500).json({ message: 'Failed to update profile' });
+  }
+});
+
+app.patch('/api/user/change-password', authenticateToken, async (req, res) => {
+  const email = req.user.email;
+  const { new_password } = req.body;
+
+  if (!new_password) {
+    return res.status(400).json({ message: 'New password is required' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const newHash = bcrypt.hashSync(user.record_id + new_password, 10);
+
+    await User.updateOne({ email }, { $set: { password_hash: newHash } });
+
+    res.status(200).json({ message: 'Password changed successfully' });
+  } catch (err) {
+    console.error('Error changing password:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.patch('/api/bookmarks/group', authenticateToken, async (req, res) => {
+  const { oldName, newName } = req.body;
+  const userEmail = req.user.email;
+
+  try {
+    const result = await Bookmark.updateMany(
+      { userEmail, list: oldName },
+      { $set: { list: newName } }
+    );
+    res.status(200).json({ message: 'List renamed', modified: result.nModified });
+  } catch (err) {
+    console.error('Rename failed:', err);
+    res.status(500).json({ message: 'Error renaming list' });
+  }
+});
+
 // === Routes ===
 app.post('/register', async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
@@ -110,45 +213,32 @@ app.post('/login', async (req, res) => {
   res.status(200).json({ message: 'Login successful', access_token: token });
 });
 
-app.post('/checkout', async (req, res) => {
-  const { email, cart_items, place_name } = req.body;
-  const order_id = require('crypto').randomUUID();
+app.post('/api/bookmarks', authenticateToken, async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+    const { name, address, web_url, list } = req.body;
 
-  for (const item of cart_items) {
-    await Transaction.create({
-      user_email: email,
-      place_name,
-      item_name: item.name,
-      item_price: item.price,
-      quantity: item.quantity,
-      order_id
+    // Check if the bookmark already exists
+    const existing = await Bookmark.findOne({ userEmail, name, address, list });
+    if (existing) {
+      return res.status(409).json({ message: 'Bookmark already exists in this list' });
+    }
+
+    // Create and save new bookmark
+    const newBookmark = new Bookmark({
+      userEmail,
+      name,
+      address,
+      web_url,
+      list
     });
+
+    await newBookmark.save();
+    res.status(201).json({ message: 'Bookmark saved successfully' });
+  } catch (error) {
+    console.error('Bookmark save error:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-
-  // Generate QR and send email
-  const qrPath = await QRCode.toDataURL(order_id);
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.PYTHON_BACKEND_SENDER_EMAIL_CREDENTIALS,
-      pass: process.env.PYTHON_BACKEND_SENDER_PASSWORD_CREDENTIALS
-    }
-  });
-
-  const message = {
-    from: process.env.PYTHON_BACKEND_SENDER_EMAIL_CREDENTIALS,
-    to: email,
-    subject: `Order Confirmation - ${order_id}`,
-    html: `<p>Thanks for your order at ${place_name}</p><img src="${qrPath}" alt="QR Code" />`
-  };
-
-  transporter.sendMail(message, (err, info) => {
-    if (err) {
-      console.error('Email failed:', err);
-      return res.status(500).json({ message: 'Email failed' });
-    }
-    res.status(200).json({ message: 'Checkout successful, email sent' });
-  });
 });
 
 // === Start Server ===
