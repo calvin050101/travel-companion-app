@@ -1,6 +1,6 @@
 import React from 'react';
-import Minigame from '../PageComponents/Minigame/Minigame'; // Corrected relative path
-import '../PageComponents/Minigame/Minigame.css'; // Scoped styles specific to Minigame
+import Currency from '../PageComponents/Currency/Currency'; // Corrected relative path
+import '../PageComponents/Currency/Currency.css'; // Scoped styles specific to Minigame
 import FormHeader from './FormStyles/FormHeader';
 
 const MinigamePage = () => {
@@ -9,7 +9,7 @@ const MinigamePage = () => {
       <FormHeader />
       <div className="minigame-content">
         <h1 className="minigame-title">Currency Converter</h1>
-        <Minigame />
+        <Currency />
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const QRCode = require('qrcode');
+const currencyRoutes = require('./routes/currency');  // ✅ Added your currency route
 
 dotenv.config();
 
@@ -13,11 +14,10 @@ const app = express();
 app.use(cors({ origin: '*', credentials: true }));
 app.use(express.json());
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+// === MongoDB connection ===
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 // === Mongoose Schemas ===
 const userSchema = new mongoose.Schema({
@@ -49,34 +49,37 @@ function validatePassword(salt, password, hash) {
 }
 
 function authenticateToken(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (!token) return res.sendStatus(401);
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403);
-        req.user = user;
-        next();
-    });
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
 }
 
+// === Routes ===
+
+// Test route
+app.get('/test', (req, res) => {
+  res.send('Test route working');
+});
+
+// Currency routes
+app.use("/api/currency", currencyRoutes);
+
+// Auth + profile + bookmarks (your original routes)
 app.get('/check-auth', authenticateToken, (req, res) => {
-    res.status(200).json({ authenticated: true });
+  res.status(200).json({ authenticated: true });
 });
 
 app.get('/api/user/profile', authenticateToken, async (req, res) => {
   try {
     const email = req.user.email;
-
-    const user = await User.findOne({ email }, {
-      _id: 0,
-      first_name: 1,
-      last_name: 1,
-      email: 1
-    });
-
+    const user = await User.findOne({ email }, { _id: 0, first_name: 1, last_name: 1, email: 1 });
     if (!user) return res.status(404).json({ message: 'User not found' });
-
     res.status(200).json(user);
   } catch (err) {
     console.error('Profile fetch error:', err);
@@ -88,7 +91,6 @@ app.get('/api/bookmarks/lists', authenticateToken, async (req, res) => {
   try {
     const userEmail = req.user.email;
     const lists = await Bookmark.distinct('list', { userEmail });
-
     res.status(200).json({ lists });
   } catch (error) {
     console.error('Failed to fetch lists:', error);
@@ -162,7 +164,6 @@ app.patch('/api/user/change-password', authenticateToken, async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const newHash = bcrypt.hashSync(user.record_id + new_password, 10);
-
     await User.updateOne({ email }, { $set: { password_hash: newHash } });
 
     res.status(200).json({ message: 'Password changed successfully' });
@@ -188,7 +189,6 @@ app.patch('/api/bookmarks/group', authenticateToken, async (req, res) => {
   }
 });
 
-// === Routes ===
 app.post('/register', async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   const recordId = require('crypto').randomBytes(16).toString('hex');
@@ -218,22 +218,14 @@ app.post('/api/bookmarks', authenticateToken, async (req, res) => {
     const userEmail = req.user.email;
     const { name, address, web_url, list } = req.body;
 
-    // Check if the bookmark already exists
     const existing = await Bookmark.findOne({ userEmail, name, address, list });
     if (existing) {
       return res.status(409).json({ message: 'Bookmark already exists in this list' });
     }
 
-    // Create and save new bookmark
-    const newBookmark = new Bookmark({
-      userEmail,
-      name,
-      address,
-      web_url,
-      list
-    });
-
+    const newBookmark = new Bookmark({ userEmail, name, address, web_url, list });
     await newBookmark.save();
+
     res.status(201).json({ message: 'Bookmark saved successfully' });
   } catch (error) {
     console.error('Bookmark save error:', error);

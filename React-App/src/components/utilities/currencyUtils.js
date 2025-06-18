@@ -1,28 +1,31 @@
-export const getExchangeRate = async (fromCurrency, toCurrency, amount = 1) => {
-  const API_KEY = process.env.REACT_APP_EXCHANGE_API_KEY;
-  const API_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/pair/${fromCurrency}/${toCurrency}`;
-
-  try {
-    const response = await fetch(API_URL);
-    if (!response.ok) throw new Error("Failed to fetch exchange rate");
-    const data = await response.json();
-
-    return {
-      success: true,
-      rate: (data.conversion_rate * amount).toFixed(2),
-      raw: data,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      message: error.message || "Something went wrong",
-    };
-  }
-};
-
-export const getFlagURL = (currencyCode) => {
-  const countryCode = currencyCode.substring(0, 2).toUpperCase();
-  return `https://flagsapi.com/${countryCode}/flat/64.png`;
+export const currencyToCountryCode = {
+  MYR: "MY",
+  USD: "US",
+  EUR: "DE",
+  GBP: "GB",
+  AUD: "AU",
+  CAD: "CA",
+  NZD: "NZ",
+  JPY: "JP",
+  CNY: "CN",
+  INR: "IN",
+  XOF: "SN",
+  XAF: "CM",
+  XCD: "AG",
+  XPF: "PF",
+  FOK: "FO",
+  GGP: "GG",
+  IMP: "IM",
+  JEP: "JE",
+  SHP: "SH",
+  SLE: "SL",
+  SSP: "SS",
+  STN: "ST",
+  TVD: "TV",
+  XAU: "UN",
+  XAG: "UN",
+  XPT: "UN",
+  XPD: "UN",
 };
 
 export const currencyCodes = [
@@ -44,3 +47,24 @@ export const currencyCodes = [
   "VND", "VUV", "WST", "XAF", "XCD", "XOF", "XPF", "YER", "ZAR", "ZMW",
   "ZWL"
 ];
+
+
+export const getExchangeRate = async (fromCurrency, toCurrency, amount = 1) => {
+  try {
+    const response = await fetch(
+      `http://localhost:4000/api/currency/exchange-rate?from=${fromCurrency}&to=${toCurrency}&amount=${amount}`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      success: false,
+      message: error.message || "Something went wrong",
+    };
+  }
+};
+
+export const getFlagURL = (currencyCode) => {
+  const countryCode = currencyToCountryCode[currencyCode] || currencyCode.substring(0, 2).toUpperCase();
+  return `https://flagsapi.com/${countryCode}/flat/64.png`;
+};

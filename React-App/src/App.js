@@ -7,7 +7,7 @@ import HomePage from './components/Pages/HomePage';
 import LoginPage from './components/Pages/LoginPage';
 import RegistrationPage from './components/Pages/RegistrationPage';
 import Dashboard from './components/Pages/DashboardPage.jsx';
-import Minigamepage from './components/Pages/MinigamePage';
+import Minigamepage from './components/Pages/CurrencyPage';
 import {SelectedPlaceProvider} from './components/PlaceDetails/SelectedPlaceContext';
 import NotFound from './components/Pages/404Page';
 

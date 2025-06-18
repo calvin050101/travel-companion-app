@@ -13,11 +13,8 @@
   background: url('./bg.png') #030728 no-repeat center;
   background-size: cover;
   min-height: 100vh;
-
-  /* Push content below the appbar */
-  padding-top: 0px; 
+  padding-top: 0;
   padding-bottom: 40px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,45 +30,52 @@
 
 /* Title Style */
 .minigame-title {
-  color: black;
-  font-size: 2em;
-  margin-bottom: 20px;
+  color: #fff;
+  font-size: 2.2em;
+  margin-bottom: 25px;
   text-align: center;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
 }
 
 /* Currency Converter Box */
 .currency-converter {
-  max-width: 410px;
+  max-width: 420px;
   margin: 0 auto;
-  padding: 40px 30px 50px;
-  border-radius: 8px;
-  backdrop-filter: blur(30px);
-  background: rgba(2, 7, 40, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  padding: 45px 35px 55px;
+  border-radius: 12px;
+  backdrop-filter: blur(35px);
+  background: rgba(3, 7, 40, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  transition: 0.3s ease;
+}
+
+.currency-converter:hover {
+  box-shadow: 0 12px 50px rgba(0, 0, 0, 0.8);
 }
 
 .converter-title {
   color: #fff;
-  font-size: 1.65rem;
-  font-weight: 600;
+  font-size: 1.8rem;
+  font-weight: 700;
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .converter-form {
-  margin-top: 45px;
+  margin-top: 40px;
 }
 
 .form-group {
   display: flex;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   flex-direction: column;
 }
 
 .form-label {
-  color: #fff;
+  color: #ddd;
   font-weight: 500;
-  margin-bottom: 9px;
+  margin-bottom: 8px;
   font-size: 1rem;
 }
 
@@ -82,16 +86,18 @@
   color: #fff;
   font-weight: 500;
   min-height: 48px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.form-input:focus {
+  border-color: #66fcf1;
+  box-shadow: 0 0 5px #66fcf1;
 }
 
 .form-currency-group {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   gap: 15px;
 }
 
@@ -100,13 +106,13 @@
   padding: 0 10px;
   min-height: 45px;
   align-items: center;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .currency-select img {
-  width: 25px;
+  width: 26px;
 }
 
 .currency-dropdown {
@@ -116,43 +122,44 @@
   color: #fff;
   font-size: 1rem;
   font-weight: 500;
-  padding: 0 10px 0 5px;
+  padding: 0 10px;
 }
 
 .currency-dropdown option {
   color: #000;
-  font-weight: 500;
 }
 
 .swap-icon {
-  height: 40px;
-  width: 40px;
+  height: 42px;
+  width: 42px;
   cursor: pointer;
   display: flex;
   margin-top: 25px;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  transition: 0.2s ease;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transition: 0.3s ease;
 }
 
 .swap-icon:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .submit-button {
   width: 100%;
   min-height: 52px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: none;
   outline: none;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #66fcf1, #45a29e);
+  color: #030728;
   cursor: pointer;
-  margin-top: 5px;
-  transition: 0.2s ease;
+  margin-top: 10px;
+  transition: 0.3s ease;
 }
 
 .submit-button.loading {
@@ -161,24 +168,24 @@
 }
 
 .submit-button:hover {
-  background: rgba(255, 255, 255, 0.7);
+  background: linear-gradient(135deg, #45a29e, #66fcf1);
 }
 
 .exchange-rate-result {
   color: #fff;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   text-align: center;
   padding: 25px 0;
-  margin-top: 25px;
-  border-radius: 6px;
+  margin-top: 30px;
+  border-radius: 8px;
   letter-spacing: 0.5px;
   background: rgba(255, 255, 255, 0.15);
 }
 
 @media (max-width: 640px) {
   .minigame-page {
-    padding: 20px 10px 40px; /* keep bottom padding consistent */
+    padding: 20px 10px 40px;
   }
 
   .currency-converter {
