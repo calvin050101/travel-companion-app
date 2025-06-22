@@ -59,7 +59,7 @@ const Header = ({ onPlaceChanged, onLoad }) => {
 
         <Box display="flex" alignItems="center" justifyContent="space-between">
 
-          <Link to="/minigame" style={{ textDecoration: 'none' }}>
+          <Link to="/currency" style={{ textDecoration: 'none' }}>
             <IconButton aria-label="Euro" style={{ color: '#e1e1e1' }}>
               <Euro />
             </IconButton>
