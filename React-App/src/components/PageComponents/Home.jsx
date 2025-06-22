@@ -1,6 +1,6 @@
 import React, {useState,useEffect} from 'react';
 import {CssBaseline,Grid} from '@material-ui/core';
-
+import {geocodeAddress} from '../../api';
 import {getPlacesData} from '../../api';
 import Header from '../Header/Header';
 import List from '../List/List';
@@ -26,6 +26,8 @@ const Home = () =>
     const [autocomplete,setAutocomplete] = useState(null);
     const [childClicked, setChildClicked] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    const [searchError, setSearchError] = useState(null);
 
     useEffect(() => 
     {
@@ -59,17 +61,60 @@ const Home = () =>
 
     const onLoad = (autoC) => setAutocomplete(autoC);
 
-    const onPlaceChanged = () =>
-    {
+    const onPlaceChanged = () =>{
+        const place = autocomplete.getPlace();
+        if (place.geometry){
         const lat = autocomplete.getPlace().geometry.location.lat();
         const lng = autocomplete.getPlace().geometry.location.lng();
         setCoordinates({lat,lng});
+        };
+    };
+
+    // Add this new function for direct search
+    const handleDirectSearch = async (query) => {
+        if (!query.trim()) {
+            setSearchError(null);
+            return;
+        }
+
+        setSearchError(null);
+        setIsLoading(true);
+        
+        try {
+        const results = await geocodeAddress(query);
+        
+        if (!results || results.length === 0) {
+            setSearchError('Location not found');
+            return;
+        }
+        
+        const firstResult = results[0];
+        if (firstResult.geometry && firstResult.geometry.location) {
+            const location = firstResult.geometry.location;
+            
+            // Check if location is a function (Google Maps LatLng object) or a plain object with lat/lng properties
+            const lat = typeof location.lat === 'function' ? location.lat() : location.lat;
+            const lng = typeof location.lng === 'function' ? location.lng() : location.lng;
+            
+            setCoordinates({
+                lat,
+                lng,
+            });
+        } else {
+            setSearchError('Location data not available');
+        }
+    } catch (error) {
+        console.error('Search error:', error);
+        setSearchError(error.message || 'Search failed');
+    } finally {
+        setIsLoading(false);
+        }
     };
 
     return (
         <>
             <CssBaseline />
-            <Header onPlaceChanged = {onPlaceChanged} onLoad = {onLoad}/>
+            <Header onPlaceChanged = {onPlaceChanged} onLoad = {onLoad} onDirectSearch = {handleDirectSearch} searchError = {searchError}/>
             <Grid container spacing={3} style={{width: '100%'}}>
                 <Grid item xs={12} md={4}>
                     <List 

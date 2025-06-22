@@ -25,3 +25,30 @@ export const getPlacesData = async (type, sw, ne) => {
     console.log(error)
   }
 }
+
+export const geocodeAddress = async (address) => {
+  try {
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?` +
+      `address=${encodeURIComponent(address)}&` +
+      `key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`
+    );
+    const data = await response.json();
+    
+    console.log(`Full geocoding API response: ${data}`); // Debug log
+    
+    if (data.status === 'ZERO_RESULTS') {
+      console.warn('No results found for:', address);
+      return null;
+    }
+    
+    if (data.status !== 'OK') {
+      throw new Error(`Geocoding error: ${data.status}`);
+    }
+    
+    return data.results;
+  } catch (error) {
+    console.error('Geocoding API error:', error);
+    throw error;
+  }
+};

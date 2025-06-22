@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import { AppBar, Toolbar, Typography, InputBase, Box, IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
@@ -8,10 +8,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import useStyles from './styles.js';
 import { checkUserAuthentication } from '../utilities/authUtils.js';
 
-const Header = ({ onPlaceChanged, onLoad }) => {
+const Header = ({ onPlaceChanged, onLoad, onDirectSearch, searchError }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const inputRef = useRef();
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -22,31 +24,20 @@ const Header = ({ onPlaceChanged, onLoad }) => {
     checkAuthentication();
   }, [localStorage.getItem('token')]);
 
-  const handlePlaceChanged = (place) => {
-    console.log('Place changed', place);
-
-    if (place && place.geometry && place.geometry.location) {
-      const location = {
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-      };
-
-      console.log('Location:', location);
-    } else {
-      console.error('Invalid place:', place);
-    }
-  };
-
-  const handleLoad = (autocomplete) => {
-    console.log('Autocomplete loaded', autocomplete);
-  };
-
   const handleAccountCircleClick = () => {
     console.log('AccountCircle clicked');
     if (isLoggedIn) {
       navigate('/dashboard');
     } else {
       navigate('/login');
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent form submission if wrapped in a form
+      onDirectSearch(searchQuery);
+      setSearchQuery(''); // Clear input after successful search
     }
   };
 
@@ -87,17 +78,28 @@ const Header = ({ onPlaceChanged, onLoad }) => {
             </Link>
           )}
 
-          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
+          <Box display ="flex" flexDirection = "column">
+            <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  inputRef={inputRef}
+                  placeholder="Search…"
+                  classes={{ root: classes.inputRoot, input: classes.inputInput }}
+                  value = {searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                />
               </div>
-              <InputBase
-                placeholder="Search…"
-                classes={{ root: classes.inputRoot, input: classes.inputInput }}
-              />
-            </div>
-          </Autocomplete>
+            </Autocomplete>
+            {searchError && (
+              <Typography color="error" variant="caption">
+                {searchError}
+              </Typography>
+            )}
+          </Box>
         </Box>
       </Toolbar>
     </AppBar>

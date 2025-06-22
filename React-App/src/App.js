@@ -7,7 +7,7 @@ import LoginPage from './components/Pages/LoginPage';
 import RegistrationPage from './components/Pages/RegistrationPage';
 import WeatherPage from './components/Pages/WeatherPage';
 import Dashboard from './components/Pages/DashboardPage.jsx';
-import Currencypage from './components/Pages/CurrencyPage';
+import CurrencyPage from './components/Pages/CurrencyPage';
 import {SelectedPlaceProvider} from './components/PlaceDetails/SelectedPlaceContext';
 import NotFound from './components/Pages/404Page';
 
@@ -23,7 +23,7 @@ const App = () =>
                         <Route path = "/register" element = {<RegistrationPage />} />
                         <Route path = "/weather" element = {<WeatherPage />} />
                         <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/currency" element={<Currencypage />} /> 
+                        <Route path="/currency" element={<CurrencyPage />} />
                         <Route path = "*" element={<NotFound />} />
                     </Routes>
             </SelectedPlaceProvider>
