@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const getWeatherData = async (cityName) => {
   try {
-    const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather`,
+    const {data} = await axios.get(`https://api.openweathermap.org/data/2.5/weather`,
       {
         params:
         {
@@ -12,7 +12,7 @@ export const getWeatherData = async (cityName) => {
         }
       });
 
-    return response.data;
+    return data;
   } catch (error) {
     console.log(error);
   }
