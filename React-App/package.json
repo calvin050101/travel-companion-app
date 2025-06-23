@@ -2,6 +2,9 @@
   "name": "travel-companion",
   "version": "1.0.0",
   "private": true,
+  "engines":{
+    "node": ">=18.18.0 <19.0.0"
+  },
   "homepage": ".",
   "dependencies": {
     "@material-ui/core": "^4.12.4",
