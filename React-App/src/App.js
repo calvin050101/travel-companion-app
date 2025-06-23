@@ -14,7 +14,7 @@ import NotFound from './components/Pages/404Page';
 const App = () => 
 {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
             <SelectedPlaceProvider>
                     <CssBaseline />
                     <Routes>
