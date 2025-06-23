@@ -56,7 +56,7 @@ const PlaceDetails = ({ place, selected, refProp, type }) => {
 
       try {
         // Get lists
-        const listRes = await fetch('http://localhost:4000/api/bookmarks/lists', {
+        const listRes = await fetch('https://travel-companion-app-backend.onrender.com/api/bookmarks/lists', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const listData = await listRes.json();
@@ -65,7 +65,7 @@ const PlaceDetails = ({ place, selected, refProp, type }) => {
         setBookmarkLists(allLists);
 
         // Get all bookmarks by user
-        const bookmarkRes = await fetch('http://localhost:4000/api/bookmarks', {
+        const bookmarkRes = await fetch('https://travel-companion-app-backend.onrender.com/api/bookmarks', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const bookmarkData = await bookmarkRes.json();
@@ -98,7 +98,7 @@ const PlaceDetails = ({ place, selected, refProp, type }) => {
 
     try {
       // Fetch existing saved bookmarks again
-      const res = await fetch('http://localhost:4000/api/bookmarks', {
+      const res = await fetch('https://travel-companion-app-backend.onrender.com/api/bookmarks', {
         headers: { Authorization: `Bearer ${token}` },
       });
       const allBookmarks = await res.json();
@@ -110,7 +110,7 @@ const PlaceDetails = ({ place, selected, refProp, type }) => {
       // Add new bookmarks
       for (const list of updatedLists) {
         if (!existingLists.includes(list)) {
-          await fetch('http://localhost:4000/api/bookmarks', {
+          await fetch('https://travel-companion-app-backend.onrender.com/api/bookmarks', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const PlaceDetails = ({ place, selected, refProp, type }) => {
       // Delete bookmarks unchecked
       for (const list of existingLists) {
         if (!updatedLists.includes(list)) {
-          await fetch('http://localhost:4000/api/bookmarks', {
+          await fetch('https://travel-companion-app-backend.onrender.com/api/bookmarks', {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',

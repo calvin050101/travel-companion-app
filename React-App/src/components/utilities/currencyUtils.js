@@ -52,7 +52,7 @@ export const currencyCodes = [
 export const getExchangeRate = async (fromCurrency, toCurrency, amount = 1) => {
   try {
     const response = await fetch(
-      `http://localhost:4000/api/currency/exchange-rate?from=${fromCurrency}&to=${toCurrency}&amount=${amount}`
+      `https://travel-companion-app-backend.onrender.com/api/currency/exchange-rate?from=${fromCurrency}&to=${toCurrency}&amount=${amount}`
     );
     const data = await response.json();
     return data;

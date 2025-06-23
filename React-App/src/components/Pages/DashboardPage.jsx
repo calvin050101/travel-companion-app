@@ -31,7 +31,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userProfileResponse = await axios.get('http://localhost:4000/api/user/profile', {
+        const userProfileResponse = await axios.get('https://travel-companion-app-backend.onrender.com/api/user/profile', {
           headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
         });
 
@@ -61,10 +61,10 @@ const Dashboard = () => {
       const token = localStorage.getItem('access_token');
 
       const [listsRes, bookmarksRes] = await Promise.all([
-        axios.get('http://localhost:4000/api/bookmarks/lists', {
+        axios.get('https://travel-companion-app-backend.onrender.com/api/bookmarks/lists', {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get('http://localhost:4000/api/bookmarks', {
+        axios.get('https://travel-companion-app-backend.onrender.com/api/bookmarks', {
           headers: { Authorization: `Bearer ${token}` },
         })
       ]);
@@ -79,7 +79,7 @@ const Dashboard = () => {
   const handleGroupClick = async (group) => {
     setSelectedGroup(group);
     try {
-      const response = await axios.get('http://localhost:4000/api/bookmarks', {
+      const response = await axios.get('https://travel-companion-app-backend.onrender.com/api/bookmarks', {
         headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
       });
       const groupPlaces = response.data.filter(b => b.list === group);
@@ -91,7 +91,7 @@ const Dashboard = () => {
 
   const handleDeleteGroup = async () => {
     try {
-      await axios.delete('http://localhost:4000/api/bookmarks/group', {
+      await axios.delete('https://travel-companion-app-backend.onrender.com/api/bookmarks/group', {
         headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
         data: { list: groupToDelete },
       });
@@ -112,7 +112,7 @@ const Dashboard = () => {
     }
 
     try {
-      await axios.patch('http://localhost:4000/api/bookmarks/group', {
+      await axios.patch('https://travel-companion-app-backend.onrender.com/api/bookmarks/group', {
         oldName: groupToEdit,
         newName: newGroupName,
       }, {
@@ -143,7 +143,7 @@ const Dashboard = () => {
   const handleDeletePlace = async (place) => {
     if (!window.confirm(`Remove "${place.name}" from "${selectedGroup}"?`)) return;
     try {
-      await axios.delete('http://localhost:4000/api/bookmarks', {
+      await axios.delete('https://travel-companion-app-backend.onrender.com/api/bookmarks', {
         headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
         data: {
           name: place.name,
@@ -171,7 +171,7 @@ const Dashboard = () => {
 
     try {
       await axios.patch(
-        'http://localhost:4000/api/user/change-password',
+        'https://travel-companion-app-backend.onrender.com/api/user/change-password',
         { new_password: newPasswordInput },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
@@ -204,7 +204,7 @@ const Dashboard = () => {
     if (isEditing) {
       try {
         await axios.patch(
-          'http://localhost:4000/api/user/update-profile',
+          'https://travel-companion-app-backend.onrender.com/api/user/update-profile',
           {
             first_name: editableUserData.first_name,
             last_name: editableUserData.last_name,

@@ -25,7 +25,7 @@ export const Login = (props) =>
         const data = { email: email, password: pass };
 
         try {
-            const response = await fetch('http://localhost:4000/login', {
+            const response = await fetch('https://travel-companion-app-backend.onrender.com/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
